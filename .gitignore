@@ -4,9 +4,8 @@ dist/
 build/
 .output/
 .nuxt/
-data/*.db
-data/*.db-journal
-data/backups/
+data/
+!data/.gitkeep
 .env
 .env.local
 .env.*.local
