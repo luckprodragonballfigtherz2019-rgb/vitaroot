@@ -1,0 +1,22 @@
+/**
+ * Entry point de estilos de VitaRoot.
+ * Importa todo en el orden correcto.
+ */
+
+/* ── Fuentes self-hosted (sin CDN) ── */
+@import '@fontsource/eb-garamond/400.css';
+@import '@fontsource/eb-garamond/500.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/jetbrains-mono/400.css';
+
+/* ── Tokens y reset ── */
+@import './tokens.css';
+@import './reset.css';
+@import './typography.css';
+
+/* ── Tailwind ── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

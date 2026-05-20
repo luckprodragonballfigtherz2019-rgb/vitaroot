@@ -1,0 +1,58 @@
+/**
+ * Tokens de VitaRoot — Modo claro (default).
+ * Detalle completo en docs/03-diseno-ux-ui.md §2.
+ *
+ * Modo oscuro: aplicar la clase .dark al <html> y se sobreescriben.
+ */
+
+:root {
+  /* ── Neutros ── */
+  --paper: #f8f4ed;
+  --paper-soft: #f2ede3;
+  --paper-deep: #e8e1d2;
+  --ink: #2b2a26;
+  --ink-soft: #5c5a52;
+  --ink-faint: #9b968a;
+  --line: #ddd6c7;
+  --line-soft: #ebe5d7;
+
+  /* ── Marca: verde musgo ── */
+  --moss-50: #eef1ec;
+  --moss-100: #d9dfd4;
+  --moss-300: #a7b49e;
+  --moss-500: #5c6f58;
+  --moss-700: #3f4d3c;
+  --moss-900: #232c21;
+
+  /* ── Acentos ── */
+  --clay: #b5826a;
+  --clay-soft: #e5d3c5;
+  --garnet: #8b4543;
+  --garnet-soft: #e8d2d0;
+  --ochre: #c9a961;
+  --ochre-soft: #f0e5c8;
+
+  /* ── Tipografía ── */
+  --font-serif: 'EB Garamond', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Inter', 'SF Pro Text', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* ── Sombras (uso mínimo) ── */
+  --shadow-sm: 0 1px 2px rgba(43, 42, 38, 0.04);
+  --shadow-md: 0 2px 8px rgba(43, 42, 38, 0.06);
+  --shadow-lg: 0 8px 24px rgba(43, 42, 38, 0.08);
+  --shadow-xl: 0 16px 48px rgba(43, 42, 38, 0.12);
+}
+
+.dark {
+  --paper: #1a1916;
+  --paper-soft: #25241f;
+  --paper-deep: #2f2d27;
+  --ink: #efe8da;
+  --ink-soft: #bcb5a4;
+  --ink-faint: #807a6e;
+  --line: #3d3a33;
+  --line-soft: #2f2d27;
+
+  --moss-500: #8fa088;
+}
