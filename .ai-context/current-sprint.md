@@ -3,19 +3,19 @@
 ## Sprint actual
 
 **Sprint:** 1 (Cimientos)
-**Tarea activa:** _ninguna, próxima T1.4_
-**Tareas completadas:** T1.1, T1.2, T1.3
-**Tareas pendientes del sprint:** T1.4, T1.5, T1.6, T1.7, T1.8, T1.9, T1.10
+**Tarea activa:** _ninguna, próxima T1.5_
+**Tareas completadas:** T1.1, T1.2, T1.3, T1.4
+**Tareas pendientes del sprint:** T1.5, T1.6, T1.7, T1.8, T1.9, T1.10
 
 ## Estado del proyecto
 
-**Último commit:** `feat(api): setup fastify base con health check`
+**Último commit:** `feat(api): setup drizzle + sqlite con tabla profile`
 **Pusheado a GitHub:** sí
 **Archivos modificados sin commitear:** ninguno
 
 ## Próxima acción concreta
 
-Implementar T1.4: setup de Drizzle ORM y SQLite. Crear `drizzle.config.ts`, schema inicial con tabla `profile`, generar y aplicar primera migración. Verificar con `drizzle-kit studio`.
+Implementar T1.5: setup de `apps/web` con Vue 3 + Vite + TypeScript. Crear el frontend con Tailwind, configurar tokens de VitaRoot del doc 03, fuentes self-hosted (EB Garamond + Inter + JetBrains Mono).
 
 ## Decisiones pendientes
 
@@ -27,8 +27,11 @@ Implementar T1.4: setup de Drizzle ORM y SQLite. Crear `drizzle.config.ts`, sche
 
 ## Notas de la última sesión
 
-- T1.3 completada: backend Fastify corriendo en http://localhost:3001/health.
-- El servidor escucha solo en 127.0.0.1 (coherente con local-only).
-- pnpm pidió aprobar builds de esbuild: aceptado.
-- Workflow asistente-pasa-código + usuario-pega funciona muy bien.
-- Sesión productiva: 3 tareas en una sesión.
+- T1.4 completada: Drizzle + SQLite funcionando con tabla profile.
+- Decisión técnica importante: db.ts calcula la ruta de la BD con fileURLToPath en lugar de process.cwd() para que sea independiente de quién ejecute el comando. Lo dejamos documentado para futuras refs.
+- Lecciones del PC del cole:
+  - Cada PC necesita su `pnpm install` (las dependencias no van a Git)
+  - Cada PC necesita su `gh auth login` con la cuenta personal
+  - `gh auth status` para verificar
+- `.gitignore` actualizado: ahora `data/` se ignora completa (incluyendo .db, .db-shm, .db-wal) con excepción de `.gitkeep`.
+- Aprendido: `journal_mode = WAL` crea archivos `.db-shm` y `.db-wal` auxiliares.
