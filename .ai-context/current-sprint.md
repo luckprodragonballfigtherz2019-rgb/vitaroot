@@ -3,19 +3,19 @@
 ## Sprint actual
 
 **Sprint:** 1 (Cimientos)
-**Tarea activa:** _ninguna, próxima T1.7_
-**Tareas completadas:** T1.1, T1.2, T1.3, T1.4, T1.5, T1.6
-**Tareas pendientes del sprint:** T1.7, T1.8, T1.9, T1.10
+**Tarea activa:** _ninguna, próxima T1.8_
+**Tareas completadas:** T1.1, T1.2, T1.3, T1.4, T1.5, T1.6, T1.7
+**Tareas pendientes del sprint:** T1.8, T1.9, T1.10
 
 ## Estado del proyecto
 
-**Último commit:** `feat(web): layout base con sidebar y topbar`
+**Último commit:** `feat(web): rutas y páginas placeholder con animación de transición`
 **Pusheado a GitHub:** sí
 **Archivos modificados sin commitear:** ninguno
 
 ## Próxima acción concreta
 
-Implementar T1.7: rutas y páginas vacías. Crear las vistas placeholder para Gym, Comidas, Salud, Profile, Settings. Configurar todas las rutas en router/index.ts. Animación de transición entre rutas (fade + translateY).
+Implementar T1.8: cliente HTTP tipado base. Crear `apps/web/src/api/client.ts` con función `request<T>()` que valida respuestas con Zod, y `apps/web/src/api/system.ts` con `getHealth()`. Verificar end-to-end: el DashboardView llama al backend y muestra la respuesta.
 
 ## Decisiones pendientes
 
@@ -27,10 +27,7 @@ Implementar T1.7: rutas y páginas vacías. Crear las vistas placeholder para Gy
 
 ## Notas de la última sesión
 
-- T1.6 completada: layout base funcionando (Sidebar + TopBar + AppShell + Button).
-- Lección importante: si haces fix local sin commit, se pierde al cambiar de PC. Recordar siempre `git status` al cerrar.
-- Layout verificado visualmente: sidebar 240px fija, topbar sticky, contenido principal con ml-60.
-- Navegación entre rutas funciona aunque algunas vistas no existan (queda en blanco, esperado).
-- Lecciones técnicas:
-  - tsconfig.json necesita `rootDir: "./src"` explícito (TypeScript moderno).
-  - Los warnings de LF→CRLF en Git son inofensivos en Windows.
+- T1.7 completada: 7 vistas placeholder + router con 8 rutas + transición page (fade + translateY 250ms).
+- Patrón usado: PlaceholderView.vue reutilizable que recibe props (module, title, description).
+- Ruta /gym/:id colocada DESPUÉS de /gym/new para no capturar 'new' como id.
+- Transición usa <RouterView v-slot="{ Component }"> con <Transition mode="out-in">.
