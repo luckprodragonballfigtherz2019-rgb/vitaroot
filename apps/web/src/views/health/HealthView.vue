@@ -4,6 +4,9 @@ import WaterWidget from '@/components/feature/health/WaterWidget.vue'
 import SleepWidget from '@/components/feature/health/SleepWidget.vue'
 import WeightWidget from '@/components/feature/health/WeightWidget.vue'
 import MoodWidget from '@/components/feature/health/MoodWidget.vue'
+import SleepLogForm from '@/components/feature/health/SleepLogForm.vue'
+import WeightLogForm from '@/components/feature/health/WeightLogForm.vue'
+import MoodLogForm from '@/components/feature/health/MoodLogForm.vue'
 import Modal from '@/components/ui/Modal.vue'
 
 const sleepFormOpen = ref(false)
@@ -40,25 +43,25 @@ function openMoodForm(): void {
       <MoodWidget :open-form="openMoodForm" />
     </div>
 
-    <!-- Modal Sueño (placeholder) -->
     <Modal v-model="sleepFormOpen" title="Registrar noche">
-      <p class="body-md text-ink-soft">
-        Formulario disponible en la siguiente tarea (T2.10).
-      </p>
+      <SleepLogForm
+        @close="sleepFormOpen = false"
+        @saved="sleepFormOpen = false"
+      />
     </Modal>
 
-    <!-- Modal Peso (placeholder) -->
     <Modal v-model="weightFormOpen" title="Registrar peso">
-      <p class="body-md text-ink-soft">
-        Formulario disponible en la siguiente tarea (T2.10).
-      </p>
+      <WeightLogForm
+        @close="weightFormOpen = false"
+        @saved="weightFormOpen = false"
+      />
     </Modal>
 
-    <!-- Modal Ánimo (placeholder) -->
     <Modal v-model="moodFormOpen" title="¿Cómo te sientes hoy?">
-      <p class="body-md text-ink-soft">
-        Formulario disponible en la siguiente tarea (T2.10).
-      </p>
+      <MoodLogForm
+        @close="moodFormOpen = false"
+        @saved="moodFormOpen = false"
+      />
     </Modal>
   </div>
 </template>
