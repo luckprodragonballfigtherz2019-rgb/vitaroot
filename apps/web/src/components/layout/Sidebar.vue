@@ -10,8 +10,10 @@ import {
   Settings,
   Sprout,
 } from 'lucide-vue-next'
+import { useSidebar } from '@/composables/useSidebar'
 
 const route = useRoute()
+const { collapsed } = useSidebar()
 
 const navItems = [
   { to: '/', label: 'Hoy', icon: LayoutDashboard },
@@ -37,15 +39,21 @@ const itemClasses = computed(() => (path: string) => [
     ? 'bg-moss-50 text-moss-700'
     : 'text-ink-soft hover:text-ink hover:bg-paper-soft',
 ])
+
+const asideClasses = computed(() => [
+  'fixed left-0 top-0 h-screen bg-paper border-r border-line-soft flex flex-col',
+  'transition-[width] duration-slow ease-out-soft overflow-hidden',
+  collapsed.value ? 'w-16' : 'w-60',
+])
 </script>
 
 <template>
-  <aside
-    class="fixed left-0 top-0 h-screen w-60 bg-paper border-r border-line-soft flex flex-col"
-  >
-    <div class="px-6 py-5 flex items-center gap-2">
-      <Sprout :size="22" class="text-moss-500" />
-      <span class="display-sm text-ink">VitaRoot</span>
+  <aside :class="asideClasses">
+    <div class="px-6 py-5 flex items-center gap-2 shrink-0">
+      <Sprout :size="22" class="text-moss-500 shrink-0" />
+      <span v-if="!collapsed" class="display-sm text-ink whitespace-nowrap">
+        VitaRoot
+      </span>
     </div>
 
     <nav class="flex-1 px-3 py-2 space-y-1">
@@ -54,9 +62,10 @@ const itemClasses = computed(() => (path: string) => [
         :key="item.to"
         :to="item.to"
         :class="itemClasses(item.to)"
+        :title="collapsed ? item.label : undefined"
       >
-        <component :is="item.icon" :size="18" />
-        <span>{{ item.label }}</span>
+        <component :is="item.icon" :size="18" class="shrink-0" />
+        <span v-if="!collapsed" class="whitespace-nowrap">{{ item.label }}</span>
       </RouterLink>
     </nav>
 
@@ -66,9 +75,10 @@ const itemClasses = computed(() => (path: string) => [
         :key="item.to"
         :to="item.to"
         :class="itemClasses(item.to)"
+        :title="collapsed ? item.label : undefined"
       >
-        <component :is="item.icon" :size="18" />
-        <span>{{ item.label }}</span>
+        <component :is="item.icon" :size="18" class="shrink-0" />
+        <span v-if="!collapsed" class="whitespace-nowrap">{{ item.label }}</span>
       </RouterLink>
     </div>
   </aside>
