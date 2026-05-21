@@ -8,6 +8,9 @@ import { registerCors } from './plugins/cors'
 import { registerErrorHandler } from './plugins/error-handler'
 import { systemRoutes } from './modules/system/system.routes'
 import { waterRoutes } from './modules/health/water.routes'
+import { sleepRoutes } from './modules/health/sleep.routes'
+import { weightRoutes } from './modules/health/weight.routes'
+import { moodRoutes } from './modules/health/mood.routes'
 
 /**
  * Construye y configura una instancia de Fastify.
@@ -53,6 +56,9 @@ export async function buildApp(): Promise<FastifyInstance> {
       await api.register(
         async (health) => {
           await health.register(waterRoutes, { prefix: '/water' })
+          await health.register(sleepRoutes, { prefix: '/sleep' })
+          await health.register(weightRoutes, { prefix: '/weight' })
+          await health.register(moodRoutes, { prefix: '/mood' })
         },
         { prefix: '/health' },
       )
