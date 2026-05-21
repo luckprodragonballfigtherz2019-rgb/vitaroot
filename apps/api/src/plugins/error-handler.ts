@@ -1,4 +1,5 @@
-import type { FastifyInstance } from 'fastify'
+﻿import type { FastifyInstance } from 'fastify'
+import { ApiError } from '../lib/errors'
 
 /**
  * Plugin que registra un handler global de errores.
@@ -22,7 +23,17 @@ export async function registerErrorHandler(fastify: FastifyInstance): Promise<vo
       })
     }
 
-    // Errores con statusCode explícito (lanzados desde el código)
+    // Errores ApiError (con statusCode y code)
+    if (error instanceof ApiError) {
+      return reply.status(error.statusCode).send({
+        error: {
+          code: error.code,
+          message: error.message,
+        },
+      })
+    }
+
+    // Errores genéricos con statusCode
     const statusCode = error.statusCode ?? 500
 
     return reply.status(statusCode).send({

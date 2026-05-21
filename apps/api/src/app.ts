@@ -7,6 +7,7 @@ import { env } from './env'
 import { registerCors } from './plugins/cors'
 import { registerErrorHandler } from './plugins/error-handler'
 import { systemRoutes } from './modules/system/system.routes'
+import { waterRoutes } from './modules/health/water.routes'
 
 /**
  * Construye y configura una instancia de Fastify.
@@ -28,15 +29,12 @@ export async function buildApp(): Promise<FastifyInstance> {
         : true,
   })
 
-  // Conecta Fastify con Zod para validación + serialización tipadas
   fastify.setValidatorCompiler(validatorCompiler)
   fastify.setSerializerCompiler(serializerCompiler)
 
-  // Plugins globales
   await registerCors(fastify)
   await registerErrorHandler(fastify)
 
-  // Rutas bajo el prefijo /api/v1
   await fastify.register(
     async (api) => {
       // Health check
@@ -50,6 +48,14 @@ export async function buildApp(): Promise<FastifyInstance> {
 
       // Módulo system bajo /api/v1/system
       await api.register(systemRoutes, { prefix: '/system' })
+
+      // Módulo health bajo /api/v1/health
+      await api.register(
+        async (health) => {
+          await health.register(waterRoutes, { prefix: '/water' })
+        },
+        { prefix: '/health' },
+      )
     },
     { prefix: '/api/v1' },
   )
