@@ -1,8 +1,9 @@
 <script setup lang="ts">
-// Componente raíz de VitaRoot.
-// Su único trabajo es renderizar la vista actual según la ruta.
+import AppShell from '@/components/layout/AppShell.vue'
 </script>
 
 <template>
-  <RouterView />
+  <AppShell>
+    <RouterView />
+  </AppShell>
 </template>
