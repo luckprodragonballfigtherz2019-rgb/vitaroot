@@ -1,9 +1,32 @@
-<script setup lang="ts">
+﻿<script setup lang="ts">
 import AppShell from '@/components/layout/AppShell.vue'
 </script>
 
 <template>
   <AppShell>
-    <RouterView />
+    <RouterView v-slot="{ Component }">
+      <Transition name="page" mode="out-in">
+        <component :is="Component" />
+      </Transition>
+    </RouterView>
   </AppShell>
 </template>
+
+<style>
+.page-enter-active,
+.page-leave-active {
+  transition:
+    opacity 250ms cubic-bezier(0.32, 0.72, 0.32, 1),
+    transform 250ms cubic-bezier(0.32, 0.72, 0.32, 1);
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(8px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+</style>
