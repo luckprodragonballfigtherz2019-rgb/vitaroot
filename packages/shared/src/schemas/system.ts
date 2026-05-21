@@ -47,9 +47,11 @@ export const UpdateProfileSchema = ProfileSchema.partial().omit({
   updatedAt: true,
 })
 
-// Tipos derivados
-export type MacroTargets = z.infer<typeof MacroTargetsSchema>
-export type WaterSettings = z.infer<typeof WaterSettingsSchema>
-export type BackupSettings = z.infer<typeof BackupSettingsSchema>
-export type Profile = z.infer<typeof ProfileSchema>
-export type UpdateProfileInput = z.infer<typeof UpdateProfileSchema>
+// Tipos derivados.
+// Usamos z.output<> para tipos de SALIDA (lo que devuelve el backend tras parsear).
+// Usamos z.input<> para tipos de ENTRADA (lo que se envía al backend antes de parsear).
+export type MacroTargets = z.output<typeof MacroTargetsSchema>
+export type WaterSettings = z.output<typeof WaterSettingsSchema>
+export type BackupSettings = z.output<typeof BackupSettingsSchema>
+export type Profile = z.output<typeof ProfileSchema>
+export type UpdateProfileInput = z.input<typeof UpdateProfileSchema>

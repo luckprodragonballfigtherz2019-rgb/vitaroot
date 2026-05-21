@@ -19,15 +19,13 @@ export class ApiError extends Error {
 /**
  * Cliente HTTP tipado con validación Zod.
  *
- * @param path - Ruta relativa (ej: '/health')
- * @param schema - Schema Zod opcional para validar la respuesta
- * @param options - Opciones de fetch (method, body, headers...)
+ * Devuelve el tipo de OUTPUT del schema (con defaults aplicados).
  */
-export async function request<T>(
+export async function request<S extends z.ZodTypeAny>(
   path: string,
-  schema?: z.ZodType<T>,
+  schema?: S,
   options?: RequestInit,
-): Promise<T> {
+): Promise<z.output<S>> {
   const url = `${API_BASE}${path}`
 
   let response: Response
@@ -48,9 +46,14 @@ export async function request<T>(
     try {
       body = await response.json()
     } catch {
-      body = await response.text()
+      body = null
     }
     throw new ApiError(response.status, `HTTP ${response.status}`, body)
+  }
+
+  // 204 No Content: no hay body que parsear
+  if (response.status === 204) {
+    return undefined as z.output<S>
   }
 
   const data: unknown = await response.json()
@@ -67,5 +70,5 @@ export async function request<T>(
     return result.data
   }
 
-  return data as T
+  return data as z.output<S>
 }
