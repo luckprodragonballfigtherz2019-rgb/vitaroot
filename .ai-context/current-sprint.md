@@ -3,19 +3,25 @@
 ## Sprint actual
 
 **Sprint:** 1 (Cimientos)
-**Tarea activa:** _ninguna, próxima T1.9_
-**Tareas completadas:** T1.1, T1.2, T1.3, T1.4, T1.5, T1.6, T1.7, T1.8
-**Tareas pendientes del sprint:** T1.9, T1.10
+**Tarea activa:** _ninguna, próxima T1.10 (última del sprint)_
+**Tareas completadas:** T1.1, T1.2, T1.3, T1.4, T1.5, T1.6, T1.7, T1.8, T1.9
+**Tareas pendientes del sprint:** T1.10
 
 ## Estado del proyecto
 
-**Último commit:** `feat(web): cliente http tipado y verificación end-to-end`
+**Último commit:** `feat(web): sistema de toasts global con animación`
 **Pusheado a GitHub:** sí
 **Archivos modificados sin commitear:** ninguno
 
 ## Próxima acción concreta
 
-Implementar T1.9: composable useToast con ToastContainer. Sistema de notificaciones global (success/error/info), animación slide-in desde top-right, auto-dismiss tras 4s, montado en AppShell.
+Implementar T1.10: composable useShortcuts. Sistema de atajos de teclado global. Implementar al menos:
+- Cmd/Ctrl + \ → toggle sidebar (colapsar/expandir)
+- G luego H → navegar a /
+- G luego G → navegar a /gym
+- G luego C → navegar a /meals
+- G luego S → navegar a /health
+Animación de colapso de sidebar (300ms ease-out-soft).
 
 ## Decisiones pendientes
 
@@ -27,8 +33,8 @@ Implementar T1.9: composable useToast con ToastContainer. Sistema de notificacio
 
 ## Notas de la última sesión
 
-- T1.8 completada: cliente HTTP tipado funcionando, frontend hablando con backend.
-- Cambio importante: TODAS las rutas del backend ahora viven bajo el prefijo /api/v1 (registradas con fastify.register dentro de un bloque con prefix). Convención consistente con doc 04 §7.
-- Validación Zod end-to-end: el frontend valida que la respuesta cumple HealthResponseSchema antes de usarla.
-- Patrón cliente HTTP: función genérica request<T>(path, schema?, options?). Si pasas schema, valida. Si no, confía en TypeScript.
-- ApiError captura status 0 (network error), status real (404, 500, etc) y detalles del body.
+- T1.9 completada: sistema de toasts funcionando con animación slide-in + auto-dismiss + cierre manual.
+- Patrón estado compartido: variable `toasts` declarada FUERA del export en useToast.ts. Singleton de módulo.
+- TransitionGroup con `.toast-move` para animar reorganización cuando uno desaparece.
+- Lección importante: PowerShell se come el carácter '<' en here-strings TypeScript con generics. Solución: arreglar manualmente en VS Code añadiendo el '<' tras Record.
+- Verificado visualmente: 3 variantes funcionan (success verde / info gris / error granate), apilados, auto-dismiss 4s.
