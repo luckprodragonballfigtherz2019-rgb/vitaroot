@@ -54,7 +54,7 @@ export type Exercise = z.output<typeof ExerciseSchema>
 export type NewExerciseInput = z.input<typeof NewExerciseSchema>
 
 // ═══════════════════════════════════════════════════════════════
-// SET (una serie dentro de un ejercicio)
+// SET
 // ═══════════════════════════════════════════════════════════════
 
 export const SetTypeSchema = z.enum(['normal', 'warmup', 'dropset', 'failure'])
@@ -93,15 +93,21 @@ export type NewSetInput = z.input<typeof NewSetSchema>
 export type UpdateSetInput = z.input<typeof UpdateSetSchema>
 
 // ═══════════════════════════════════════════════════════════════
-// EXERCISE INSTANCE (un ejercicio dentro de un workout)
+// EXERCISE INSTANCE
 // ═══════════════════════════════════════════════════════════════
 
+// Plain (lo que devuelve el backend al crear, sin sus sets aún)
 export const ExerciseInstanceSchema = z.object({
   id: z.string().uuid(),
   workoutId: z.string().uuid(),
   exerciseId: z.string().uuid(),
   order: z.number().int().nonnegative(),
   notes: z.string().max(500).nullable(),
+})
+
+// Con relaciones: el ejercicio del catálogo + los sets
+export const ExerciseInstanceDetailSchema = ExerciseInstanceSchema.extend({
+  exercise: ExerciseSchema,
   sets: z.array(SetSchema),
 })
 
@@ -111,15 +117,17 @@ export const NewExerciseInstanceSchema = z.object({
 })
 
 export type ExerciseInstance = z.output<typeof ExerciseInstanceSchema>
+export type ExerciseInstanceDetail = z.output<typeof ExerciseInstanceDetailSchema>
 export type NewExerciseInstanceInput = z.input<typeof NewExerciseInstanceSchema>
 
 // ═══════════════════════════════════════════════════════════════
-// WORKOUT (sesión completa de entrenamiento)
+// WORKOUT
 // ═══════════════════════════════════════════════════════════════
 
 export const WorkoutStatusSchema = z.enum(['active', 'finished', 'discarded'])
 export type WorkoutStatus = z.output<typeof WorkoutStatusSchema>
 
+// Plain: para listados
 export const WorkoutSchema = z.object({
   id: z.string().uuid(),
   startedAt: z.coerce.date(),
@@ -129,8 +137,12 @@ export const WorkoutSchema = z.object({
   name: z.string().max(100).nullable(),
   notes: z.string().max(1000).nullable(),
   totalVolumeKg: z.number().nonnegative().nullable(),
-  exercises: z.array(ExerciseInstanceSchema),
   createdAt: z.coerce.date(),
+})
+
+// Detail: workout + ejercicios anidados (con sus sets)
+export const WorkoutDetailSchema = WorkoutSchema.extend({
+  exercises: z.array(ExerciseInstanceDetailSchema),
 })
 
 export const StartWorkoutSchema = z.object({
@@ -142,5 +154,6 @@ export const FinishWorkoutSchema = z.object({
 })
 
 export type Workout = z.output<typeof WorkoutSchema>
+export type WorkoutDetail = z.output<typeof WorkoutDetailSchema>
 export type StartWorkoutInput = z.input<typeof StartWorkoutSchema>
 export type FinishWorkoutInput = z.input<typeof FinishWorkoutSchema>

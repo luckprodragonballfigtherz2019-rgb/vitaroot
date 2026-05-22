@@ -12,11 +12,8 @@ import { sleepRoutes } from './modules/health/sleep.routes'
 import { weightRoutes } from './modules/health/weight.routes'
 import { moodRoutes } from './modules/health/mood.routes'
 import { exercisesRoutes } from './modules/gym/exercises.routes'
+import { workoutsRoutes } from './modules/gym/workouts.routes'
 
-/**
- * Construye y configura una instancia de Fastify.
- * No la arranca: eso lo hace server.ts.
- */
 export async function buildApp(): Promise<FastifyInstance> {
   const fastify = Fastify({
     logger:
@@ -41,7 +38,6 @@ export async function buildApp(): Promise<FastifyInstance> {
 
   await fastify.register(
     async (api) => {
-      // Health check
       api.get('/health', async () => {
         return {
           status: 'ok' as const,
@@ -50,10 +46,8 @@ export async function buildApp(): Promise<FastifyInstance> {
         }
       })
 
-      // Módulo system bajo /api/v1/system
       await api.register(systemRoutes, { prefix: '/system' })
 
-      // Módulo health bajo /api/v1/health
       await api.register(
         async (health) => {
           await health.register(waterRoutes, { prefix: '/water' })
@@ -64,10 +58,10 @@ export async function buildApp(): Promise<FastifyInstance> {
         { prefix: '/health' },
       )
 
-      // Módulo gym bajo /api/v1/gym
       await api.register(
         async (gym) => {
           await gym.register(exercisesRoutes, { prefix: '/exercises' })
+          await gym.register(workoutsRoutes, { prefix: '/workouts' })
         },
         { prefix: '/gym' },
       )
