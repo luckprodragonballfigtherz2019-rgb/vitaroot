@@ -15,6 +15,13 @@
       "when": 1779350337965,
       "tag": "0001_neat_mauler",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1779430639477,
+      "tag": "0002_orange_prima",
+      "breakpoints": true
     }
   ]
 }

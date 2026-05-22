@@ -152,3 +152,106 @@ export type WeightLog = typeof weightLogs.$inferSelect
 export type NewWeightLog = typeof weightLogs.$inferInsert
 export type MoodLog = typeof moodLogs.$inferSelect
 export type NewMoodLog = typeof moodLogs.$inferInsert
+
+// ═══════════════════════════════════════════════════════════════
+// GYM — exercises, workouts, exercise_instances, sets
+// ═══════════════════════════════════════════════════════════════
+
+export const exercises = sqliteTable(
+  'exercises',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    name: text('name').notNull(),
+    category: text('category', {
+      enum: ['compound', 'isolation', 'cardio', 'bodyweight', 'stretching'],
+    }).notNull(),
+    primaryMuscle: text('primary_muscle').notNull(),
+    secondaryMuscles: text('secondary_muscles', { mode: 'json' })
+      .$type<string[]>()
+      .notNull()
+      .default(sql`'[]'`),
+    equipment: text('equipment'),
+    notes: text('notes'),
+    isCustom: integer('is_custom', { mode: 'boolean' }).notNull().default(false),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    nameUnique: uniqueIndex('idx_exercises_name_unique').on(t.name),
+    primaryMuscleIdx: index('idx_exercises_primary_muscle').on(t.primaryMuscle),
+  }),
+)
+
+export const workouts = sqliteTable(
+  'workouts',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    startedAt: integer('started_at', { mode: 'timestamp' }).notNull(),
+    finishedAt: integer('finished_at', { mode: 'timestamp' }),
+    durationMin: integer('duration_min'),
+    status: text('status', { enum: ['active', 'finished', 'discarded'] })
+      .notNull()
+      .default('active'),
+    name: text('name'),
+    notes: text('notes'),
+    totalVolumeKg: real('total_volume_kg'),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .default(sql`(unixepoch())`),
+  },
+  (t) => ({
+    startedAtIdx: index('idx_workouts_started_at').on(t.startedAt),
+    statusIdx: index('idx_workouts_status').on(t.status),
+  }),
+)
+
+export const exerciseInstances = sqliteTable(
+  'exercise_instances',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    workoutId: text('workout_id')
+      .notNull()
+      .references(() => workouts.id, { onDelete: 'cascade' }),
+    exerciseId: text('exercise_id')
+      .notNull()
+      .references(() => exercises.id, { onDelete: 'restrict' }),
+    order: integer('order').notNull(),
+    notes: text('notes'),
+  },
+  (t) => ({
+    workoutIdx: index('idx_exinstances_workout').on(t.workoutId),
+  }),
+)
+
+export const sets = sqliteTable(
+  'sets',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    exerciseInstanceId: text('exercise_instance_id')
+      .notNull()
+      .references(() => exerciseInstances.id, { onDelete: 'cascade' }),
+    order: integer('order').notNull(),
+    type: text('type', { enum: ['normal', 'warmup', 'dropset', 'failure'] })
+      .notNull()
+      .default('normal'),
+    weightKg: real('weight_kg'),
+    reps: integer('reps'),
+    durationSec: integer('duration_sec'),
+    completed: integer('completed', { mode: 'boolean' }).notNull().default(false),
+    restSec: integer('rest_sec'),
+    notes: text('notes'),
+  },
+  (t) => ({
+    exinstanceIdx: index('idx_sets_exinstance').on(t.exerciseInstanceId),
+  }),
+)
+
+export type Exercise = typeof exercises.$inferSelect
+export type NewExercise = typeof exercises.$inferInsert
+export type Workout = typeof workouts.$inferSelect
+export type NewWorkout = typeof workouts.$inferInsert
+export type ExerciseInstance = typeof exerciseInstances.$inferSelect
+export type NewExerciseInstance = typeof exerciseInstances.$inferInsert
+export type Set = typeof sets.$inferSelect
+export type NewSet = typeof sets.$inferInsert
