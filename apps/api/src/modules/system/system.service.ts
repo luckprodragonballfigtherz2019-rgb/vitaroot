@@ -1,4 +1,4 @@
-﻿import type { Profile, UpdateProfileInput } from '@vitaroot/shared'
+﻿import { UpdateProfileSchema, type Profile, type UpdateProfileInput } from '@vitaroot/shared'
 import { systemRepository } from './system.repository'
 
 const DEFAULT_NAME = 'Pablo'
@@ -26,18 +26,17 @@ export const systemService = {
 
   /**
    * Actualiza el perfil con los campos enviados en el patch.
+   * Parsea el input para aplicar los defaults de Zod (campos obligatorios resueltos).
    */
   async updateProfile(input: UpdateProfileInput): Promise<Profile> {
-    const updated = await systemRepository.updateProfile(input)
+    // Parse aplica los defaults: el output tiene campos resueltos
+    const parsed = UpdateProfileSchema.parse(input)
+
+    const updated = await systemRepository.updateProfile(parsed)
     return mapDbToApi(updated)
   },
 }
 
-/**
- * Convierte el tipo de Drizzle al tipo público de la API.
- * El tipo de Drizzle y el de Zod son casi idénticos pero los mantenemos
- * separados para no acoplar la capa de presentación a la de infraestructura.
- */
 function mapDbToApi(p: NonNullable<Awaited<ReturnType<typeof systemRepository.getProfile>>>): Profile {
   return {
     id: p.id,

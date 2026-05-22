@@ -11,6 +11,7 @@ import { waterRoutes } from './modules/health/water.routes'
 import { sleepRoutes } from './modules/health/sleep.routes'
 import { weightRoutes } from './modules/health/weight.routes'
 import { moodRoutes } from './modules/health/mood.routes'
+import { exercisesRoutes } from './modules/gym/exercises.routes'
 
 /**
  * Construye y configura una instancia de Fastify.
@@ -61,6 +62,14 @@ export async function buildApp(): Promise<FastifyInstance> {
           await health.register(moodRoutes, { prefix: '/mood' })
         },
         { prefix: '/health' },
+      )
+
+      // Módulo gym bajo /api/v1/gym
+      await api.register(
+        async (gym) => {
+          await gym.register(exercisesRoutes, { prefix: '/exercises' })
+        },
+        { prefix: '/gym' },
       )
     },
     { prefix: '/api/v1' },
