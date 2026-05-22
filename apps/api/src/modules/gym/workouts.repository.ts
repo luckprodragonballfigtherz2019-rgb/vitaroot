@@ -288,4 +288,81 @@ export const workoutsRepository = {
     }
     return total
   },
+  /**
+   * Devuelve el último set de un ejercicio del catálogo (en cualquier workout finalizado).
+   * Útil para mostrar "última vez: 80kg × 8" al elegir un ejercicio.
+   */
+  async findLastSetOfExercise(exerciseId: string): Promise<Set | null> {
+    const rows = await db
+      .select({
+        id: sets.id,
+        exerciseInstanceId: sets.exerciseInstanceId,
+        order: sets.order,
+        type: sets.type,
+        weightKg: sets.weightKg,
+        reps: sets.reps,
+        durationSec: sets.durationSec,
+        completed: sets.completed,
+        restSec: sets.restSec,
+        notes: sets.notes,
+      })
+      .from(sets)
+      .innerJoin(exerciseInstances, eq(exerciseInstances.id, sets.exerciseInstanceId))
+      .innerJoin(workouts, eq(workouts.id, exerciseInstances.workoutId))
+      .where(
+        and(
+          eq(exerciseInstances.exerciseId, exerciseId),
+          eq(workouts.status, 'finished'),
+          eq(sets.completed, true),
+        ),
+      )
+      .orderBy(desc(workouts.startedAt))
+      .limit(1)
+
+    return rows[0] ?? null
+  },
+
+  /**
+   * Devuelve el "PR" (mejor set) de un ejercicio.
+   * Definición: el set completado con mayor weightKg × reps de un workout finalizado.
+   */
+  async findPrOfExercise(exerciseId: string): Promise<Set | null> {
+    const rows = await db
+      .select({
+        id: sets.id,
+        exerciseInstanceId: sets.exerciseInstanceId,
+        order: sets.order,
+        type: sets.type,
+        weightKg: sets.weightKg,
+        reps: sets.reps,
+        durationSec: sets.durationSec,
+        completed: sets.completed,
+        restSec: sets.restSec,
+        notes: sets.notes,
+      })
+      .from(sets)
+      .innerJoin(exerciseInstances, eq(exerciseInstances.id, sets.exerciseInstanceId))
+      .innerJoin(workouts, eq(workouts.id, exerciseInstances.workoutId))
+      .where(
+        and(
+          eq(exerciseInstances.exerciseId, exerciseId),
+          eq(workouts.status, 'finished'),
+          eq(sets.completed, true),
+        ),
+      )
+
+    let best: typeof rows[number] | null = null
+    let bestVolume = -1
+    for (const s of rows) {
+      if (s.weightKg !== null && s.reps !== null) {
+        const volume = s.weightKg * s.reps
+        if (volume > bestVolume) {
+          bestVolume = volume
+          best = s
+        }
+      }
+    }
+
+    return best
+  },
 }

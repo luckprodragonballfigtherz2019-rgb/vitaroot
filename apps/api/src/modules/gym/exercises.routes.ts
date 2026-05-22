@@ -1,7 +1,13 @@
 ﻿import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
-import { ExerciseSchema, NewExerciseSchema, MuscleGroupSchema } from '@vitaroot/shared'
+import {
+  ExerciseSchema,
+  NewExerciseSchema,
+  MuscleGroupSchema,
+  SetSchema,
+} from '@vitaroot/shared'
 import { exercisesService } from './exercises.service'
+import { workoutsRepository } from './workouts.repository'
 
 /**
  * Endpoints del catálogo de ejercicios.
@@ -38,6 +44,34 @@ export const exercisesRoutes: FastifyPluginAsyncZod = async (fastify) => {
     },
     async (request) => {
       return exercisesService.getById(request.params.id)
+    },
+  )
+
+  // GET /api/v1/gym/exercises/:id/last-set — último set registrado
+  fastify.get(
+    '/:id/last-set',
+    {
+      schema: {
+        params: z.object({ id: z.string().uuid() }),
+        response: { 200: z.union([SetSchema, z.null()]) },
+      },
+    },
+    async (request) => {
+      return workoutsRepository.findLastSetOfExercise(request.params.id)
+    },
+  )
+
+  // GET /api/v1/gym/exercises/:id/pr — mejor set (PR)
+  fastify.get(
+    '/:id/pr',
+    {
+      schema: {
+        params: z.object({ id: z.string().uuid() }),
+        response: { 200: z.union([SetSchema, z.null()]) },
+      },
+    },
+    async (request) => {
+      return workoutsRepository.findPrOfExercise(request.params.id)
     },
   )
 
