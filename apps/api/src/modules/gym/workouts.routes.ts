@@ -10,6 +10,7 @@ import {
   NewExerciseInstanceSchema,
   NewSetSchema,
   UpdateSetSchema,
+  LogWorkoutSchema,
 } from '@vitaroot/shared'
 import { workoutsService } from './workouts.service'
 
@@ -19,6 +20,21 @@ import { workoutsService } from './workouts.service'
  */
 export const workoutsRoutes: FastifyPluginAsyncZod = async (fastify) => {
   // ── WORKOUT ───────────────────────────────────────────────
+
+  // POST /api/v1/gym/workouts/log — registrar workout completo a posteriori
+  fastify.post(
+    '/log',
+    {
+      schema: {
+        body: LogWorkoutSchema,
+        response: { 201: WorkoutSchema },
+      },
+    },
+    async (request, reply) => {
+      const created = await workoutsService.logCompleted(request.body)
+      return reply.code(201).send(created)
+    },
+  )
 
   // POST /api/v1/gym/workouts — iniciar workout
   fastify.post(

@@ -1,9 +1,11 @@
 ﻿import {
+  LogWorkoutSchema,
   StartWorkoutSchema,
   FinishWorkoutSchema,
   NewExerciseInstanceSchema,
   NewSetSchema,
   UpdateSetSchema,
+  type LogWorkoutInput,
   type Workout,
   type WorkoutDetail,
   type ExerciseInstance,
@@ -160,6 +162,54 @@ export const workoutsService = {
     if (!ok) {
       throw new NotFoundError('Set')
     }
+  },
+  /**
+   * Registra un workout completo a posteriori, en una sola operación.
+   * Crea el workout en estado 'finished' con todos sus ejercicios y sets.
+   * Todos los sets se marcan como completed=true automáticamente.
+   */
+  async logCompleted(input: LogWorkoutInput): Promise<Workout> {
+    const parsed = LogWorkoutSchema.parse(input)
+
+    // 1) Crea el workout directamente en estado 'finished'
+    const workoutId = await workoutsRepository.createCompletedWorkout({
+      startedAt: parsed.startedAt,
+      durationMin: parsed.durationMin ?? null,
+      name: parsed.name ?? null,
+      notes: parsed.notes ?? null,
+    })
+
+    // 2) Crea cada ejercicio con sus sets
+    for (let i = 0; i < parsed.exercises.length; i++) {
+      const ex = parsed.exercises[i]
+      if (!ex) continue
+
+      const instance = await workoutsRepository.addExerciseInstance({
+        workoutId,
+        exerciseId: ex.exerciseId,
+        notes: ex.notes,
+      })
+
+      for (const s of ex.sets) {
+        await workoutsRepository.addSet({
+          exerciseInstanceId: instance.id,
+          type: s.type,
+          weightKg: s.weightKg,
+          reps: s.reps,
+          durationSec: s.durationSec,
+          completed: true,
+          restSec: s.restSec,
+          notes: s.notes,
+        })
+      }
+    }
+
+    // 3) Calcula el volumen total y actualiza el workout
+    const totalVolumeKg = await workoutsRepository.calculateTotalVolume(workoutId)
+    return workoutsRepository.updateWorkoutMeta({
+      id: workoutId,
+      totalVolumeKg,
+    })
   },
 }
 

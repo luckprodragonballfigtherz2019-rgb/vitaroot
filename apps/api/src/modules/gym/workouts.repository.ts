@@ -365,4 +365,59 @@ export const workoutsRepository = {
 
     return best
   },
+  /**
+   * Crea un workout directamente en estado 'finished'.
+   * Usado para el flujo de "registrar a posteriori".
+   * Retorna solo el id (los datos completos los rellenamos después).
+   */
+  async createCompletedWorkout(input: {
+    startedAt: Date
+    durationMin: number | null
+    name: string | null
+    notes: string | null
+  }): Promise<string> {
+    const inserted = await db
+      .insert(workouts)
+      .values({
+        startedAt: input.startedAt,
+        finishedAt: new Date(),
+        durationMin: input.durationMin,
+        status: 'finished',
+        name: input.name,
+        notes: input.notes,
+      })
+      .returning({ id: workouts.id })
+
+    const created = inserted[0]
+    if (!created) {
+      throw new Error('Failed to create workout')
+    }
+    return created.id
+  },
+
+  /**
+   * Actualiza campos puntuales del workout (típicamente volumen total
+   * tras añadir todos los sets).
+   */
+  async updateWorkoutMeta(input: {
+    id: string
+    totalVolumeKg?: number
+    durationMin?: number
+  }): Promise<Workout> {
+    const patch: Record<string, unknown> = {}
+    if (input.totalVolumeKg !== undefined) patch.totalVolumeKg = input.totalVolumeKg
+    if (input.durationMin !== undefined) patch.durationMin = input.durationMin
+
+    const updated = await db
+      .update(workouts)
+      .set(patch)
+      .where(eq(workouts.id, input.id))
+      .returning()
+
+    const result = updated[0]
+    if (!result) {
+      throw new Error('Workout not found')
+    }
+    return result
+  },
 }
