@@ -12,6 +12,7 @@ import {
   NewExerciseInstanceSchema,
   NewSetSchema,
   UpdateSetSchema,
+  LogWorkoutSchema,
   type Exercise,
   type Workout,
   type WorkoutDetail,
@@ -30,6 +31,7 @@ export type FinishWorkoutInput = z.input<typeof FinishWorkoutSchema>
 export type NewExerciseInstanceInput = z.input<typeof NewExerciseInstanceSchema>
 export type NewSetInput = z.input<typeof NewSetSchema>
 export type UpdateSetInput = z.input<typeof UpdateSetSchema>
+export type LogWorkoutInput = z.input<typeof LogWorkoutSchema>
 
 export type MuscleGroup = z.input<typeof MuscleGroupSchema>
 
@@ -159,4 +161,15 @@ export async function updateSet(id: string, input: UpdateSetInput): Promise<Set>
 
 export async function deleteSet(id: string): Promise<void> {
   await request(`/gym/workouts/sets/${id}`, undefined, { method: 'DELETE' })
+}
+// ═══════════════════════════════════════════════════════════════
+// LOG WORKOUT (registrar a posteriori)
+// ═══════════════════════════════════════════════════════════════
+
+export async function logWorkout(input: LogWorkoutInput): Promise<Workout> {
+  const validated = LogWorkoutSchema.parse(input)
+  return request('/gym/workouts/log', WorkoutSchema, {
+    method: 'POST',
+    body: JSON.stringify(validated),
+  })
 }

@@ -68,6 +68,7 @@ export const SetSchema = z.object({
   weightKg: z.number().nonnegative().lt(1000).nullable(),
   reps: z.number().int().nonnegative().nullable(),
   durationSec: z.number().int().nonnegative().nullable(),
+  distanceM: z.number().int().nonnegative().nullable(),
   completed: z.boolean(),
   restSec: z.number().int().nonnegative().nullable(),
   notes: z.string().max(200).nullable(),
@@ -79,6 +80,7 @@ export const NewSetSchema = z.object({
   weightKg: z.number().nonnegative().lt(1000).optional(),
   reps: z.number().int().nonnegative().optional(),
   durationSec: z.number().int().nonnegative().optional(),
+  distanceM: z.number().int().nonnegative().optional(),
   completed: z.boolean().default(false),
   restSec: z.number().int().nonnegative().optional(),
   notes: z.string().max(200).optional(),
@@ -163,6 +165,7 @@ export const LogWorkoutSetSchema = z.object({
   weightKg: z.number().nonnegative().lt(1000).optional(),
   reps: z.number().int().nonnegative().optional(),
   durationSec: z.number().int().nonnegative().optional(),
+  distanceM: z.number().int().nonnegative().optional(),
   restSec: z.number().int().nonnegative().optional(),
   notes: z.string().max(200).optional(),
 })

@@ -200,6 +200,7 @@ export const workoutsRepository = {
     weightKg?: number
     reps?: number
     durationSec?: number
+    distanceM?: number
     completed?: boolean
     restSec?: number
     notes?: string
@@ -220,6 +221,7 @@ export const workoutsRepository = {
         weightKg: input.weightKg ?? null,
         reps: input.reps ?? null,
         durationSec: input.durationSec ?? null,
+        distanceM: input.distanceM ?? null,
         completed: input.completed ?? false,
         restSec: input.restSec ?? null,
         notes: input.notes ?? null,
@@ -239,6 +241,7 @@ export const workoutsRepository = {
     weightKg?: number
     reps?: number
     durationSec?: number
+    distanceM?: number
     completed?: boolean
     restSec?: number
     notes?: string
@@ -249,6 +252,7 @@ export const workoutsRepository = {
     if (rest.weightKg !== undefined) patch.weightKg = rest.weightKg
     if (rest.reps !== undefined) patch.reps = rest.reps
     if (rest.durationSec !== undefined) patch.durationSec = rest.durationSec
+    if (rest.distanceM !== undefined) patch.distanceM = rest.distanceM
     if (rest.completed !== undefined) patch.completed = rest.completed
     if (rest.restSec !== undefined) patch.restSec = rest.restSec
     if (rest.notes !== undefined) patch.notes = rest.notes
@@ -302,6 +306,7 @@ export const workoutsRepository = {
         weightKg: sets.weightKg,
         reps: sets.reps,
         durationSec: sets.durationSec,
+        distanceM: sets.distanceM,
         completed: sets.completed,
         restSec: sets.restSec,
         notes: sets.notes,
@@ -336,6 +341,7 @@ export const workoutsRepository = {
         weightKg: sets.weightKg,
         reps: sets.reps,
         durationSec: sets.durationSec,
+        distanceM: sets.distanceM,
         completed: sets.completed,
         restSec: sets.restSec,
         notes: sets.notes,

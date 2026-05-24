@@ -14,7 +14,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/gym/new',
     name: 'gym-new',
-    component: () => import('@/views/gym/GymNewView.vue'),
+    component: () => import('@/views/gym/GymLogView.vue'),
   },
   {
     path: '/gym/:id',

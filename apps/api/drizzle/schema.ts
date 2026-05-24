@@ -238,6 +238,7 @@ export const sets = sqliteTable(
     weightKg: real('weight_kg'),
     reps: integer('reps'),
     durationSec: integer('duration_sec'),
+    distanceM: integer('distance_m'),
     completed: integer('completed', { mode: 'boolean' }).notNull().default(false),
     restSec: integer('rest_sec'),
     notes: text('notes'),
