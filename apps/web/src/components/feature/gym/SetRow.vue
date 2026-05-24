@@ -22,8 +22,8 @@ const saving = ref(false)
 watch(
   () => [props.set.weightKg, props.set.reps],
   ([newWeight, newReps]) => {
-    weight.value = newWeight
-    reps.value = newReps
+    weight.value = newWeight ?? null
+    reps.value = newReps ?? null
   },
 )
 
